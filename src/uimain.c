@@ -72,5 +72,5 @@ int main(){
 
   //test tokenizer and tokens
   char **tokens = tokenize(user_input);
-  //print_tokens(tokens);
+  print_tokens(tokens);
 }

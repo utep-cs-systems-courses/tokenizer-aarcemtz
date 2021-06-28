@@ -1,40 +1,123 @@
-#ifndef _HISTORY_
+#include <stdio.h>
 
-#define _HISTORY_
+#include <stdlib.h>
+
+#include "tokenizer.h"
+
+#include "history.h"
 
 
 
-typedef struct s_Item {
+List *init_history(){
 
-  int id;
-  char *str;
-  struct s_Item *next;
-} Item;
+  List *user_history = (List*) malloc(sizeof(Item)*100);
 
-typedef struct s_List {
-  struct s_Item *root;
-} List;
+}
 
-/* Initialize the linked list to keep the history. */
 
-List* init_history();
 
-/* Add a history item to the end of the list.
-   List* list - the linked list
-   char* str - the string to store
-*/
+void add_history(List *list, char *str){
 
-void add_history(List *list, char *str);
+  Item *node = list->root;
 
-/* Retrieve the string stored in the node where Item->id == id.
-   List* list - the linked list
-   int id - the id of the Item to find */
+  int id = 1;
 
-char *get_history(List *list, int id);
 
-// *Print the entire contents of the list. */
-void print_history(List *list);
 
-// *Free the history list and the strings it references. */
-void free_history(List *list);
-#endif
+  //If we are barly starting history
+
+  if (node == NULL) {
+
+    list->root = (Item*) malloc(sizeof (Item));
+
+    list->root->id = id;
+
+    list->root->str = str;
+
+    list->root->next = NULL;
+
+  }
+
+
+
+  //If history is already started
+
+  else {
+
+    while(node->next != NULL) {
+
+      node = node->next;
+
+      id++;
+
+    }
+
+    node->next = (Item*) malloc(sizeof (Item));
+
+    node->next->id = id++;
+
+    node->next->str = str;
+
+    node->next->next = NULL;
+
+  }
+
+}
+
+
+
+char *get_history(List *list, int id){
+
+  Item *node = list->root;
+
+
+
+  while(node != NULL){
+
+    if(node->id == id){
+
+      return node->str;
+
+    }
+
+    node = node->next;
+
+  }
+
+  return "YOUR STRING NOT FOUND :(";
+
+}
+
+
+
+void print_history(List *list){
+
+  Item *node = list->root;
+
+  while (node != NULL){
+
+    printf("\n%s", node->str);
+
+    node = node->next;
+
+  }
+
+}
+
+
+
+void free_history(List *list){
+
+  Item *node = list->root;
+
+  while (node != NULL){
+
+    free(node);
+
+    node = node->next;
+
+  }
+
+  free(list);
+
+}
